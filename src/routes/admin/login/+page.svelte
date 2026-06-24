@@ -80,9 +80,9 @@
       </form>
 
       <div class="auth-footer">
-        <p>New Administrator? <span class="link-text" onclick={() => goto('/admin/register')}>Create an account</span></p>
-        <p class="customer-switch" onclick={() => goto('/login')}>Go to Customer Portal</p>
-        <p class="home-link" onclick={() => goto('/')}>← Back to Home</p>
+        <p>New Administrator? <a class="link-text" href="/admin/register">Create an account</a></p>
+        <button type="button" class="customer-switch" onclick={() => goto('/login')}>Go to Customer Portal</button>
+        <button type="button" class="home-link" onclick={() => goto('/')}>← Back to Home</button>
       </div>
     </div>
   </div>

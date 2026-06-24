@@ -107,7 +107,7 @@
                   onerror={(e) => { e.currentTarget.src = 'https://images.unsplash.com/photo-1591488320449-011701bb6704?w=500&auto=format&fit=crop&q=60'; }}
                 />
                 <div class="product-info">
-                  <h3 onclick={() => goto(`/products/${order.productId}`)}>{order.product.name}</h3>
+                  <button type="button" class="order-product-link" onclick={() => goto(`/products/${order.productId}`)}>{order.product.name}</button>
                   <span class="details">Quantity: <strong>{order.quantity}</strong> unit(s)</span>
                   <span class="details">Price per unit: <strong>₹{Math.round(order.totalPrice / order.quantity).toLocaleString('en-IN')}</strong></span>
                 </div>

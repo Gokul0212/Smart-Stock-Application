@@ -92,8 +92,7 @@
         throw new Error(errData.message || "Failed to create product on backend.");
       }
 
-      // 2. Also write to client-side localStorage db (to sync both fallback state systems)
-      await dbAddProduct(newProduct);
+      // Removed redundant client-side dbAddProduct call because API now writes to Firebase.
 
       successMsg = "Product added successfully!";
       // Clear form
@@ -123,7 +122,7 @@
         <button class="toggle-sidebar" onclick={() => sidebarOpen = !sidebarOpen}>
           {sidebarOpen ? '← Hide Menu' : '→ Show Menu'}
         </button>
-        <span class="back-link" onclick={() => goto('/admin/dashboard')}>← Back to Inventory</span>
+        <button type="button" class="back-link" onclick={() => goto('/admin/dashboard')}>← Back to Inventory</button>
         <h1>Add New Hardware Product</h1>
       </div>
     </div>

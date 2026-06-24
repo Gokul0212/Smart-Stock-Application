@@ -1,5 +1,5 @@
 import { json } from '@sveltejs/kit';
-import { srvGetProducts, srvAddProduct, srvUpdateProduct, srvDeleteProduct } from '$lib/server/db.js';
+import { dbGetProducts as srvGetProducts, dbAddProduct as srvAddProduct, dbUpdateProduct as srvUpdateProduct, dbDeleteProduct as srvDeleteProduct } from '$lib/firebase.js';
 
 // GET all products
 export async function GET() {

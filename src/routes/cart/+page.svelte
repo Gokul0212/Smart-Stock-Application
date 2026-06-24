@@ -98,12 +98,12 @@
         <div class="cart-items-list">
           {#each cartItems as item (item.cartId)}
             <div class="cart-item">
-              <div class="item-img" onclick={() => goto(`/products/${item.productId}`)}>
+              <button type="button" class="item-img" onclick={() => goto(`/products/${item.productId}`)}>
                 <img src={item.product.imageUrl} alt={item.product.name} />
-              </div>
+              </button>
 
               <div class="item-details">
-                <h3 onclick={() => goto(`/products/${item.productId}`)}>{item.product.name}</h3>
+                <button type="button" class="item-link" onclick={() => goto(`/products/${item.productId}`)}>{item.product.name}</button>
                 <span class="category">{item.product.category}</span>
                 <span class="stock-info {item.product.stock < 5 ? 'critical' : ''}">
                   {#if item.product.stock === 0}

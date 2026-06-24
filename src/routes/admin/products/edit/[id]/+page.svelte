@@ -98,8 +98,7 @@
         throw new Error(errData.message || "Failed to update product on server.");
       }
 
-      // 2. Sync to client database
-      await dbUpdateProduct(productId, updatedProduct);
+      // Removed redundant client-side dbUpdateProduct call because API now writes to Firebase.
 
       successMsg = "Product updated successfully!";
       setTimeout(() => {
@@ -123,7 +122,7 @@
         <button class="toggle-sidebar" onclick={() => sidebarOpen = !sidebarOpen}>
           {sidebarOpen ? '← Hide Menu' : '→ Show Menu'}
         </button>
-        <span class="back-link" onclick={() => goto('/admin/dashboard')}>← Back to Inventory</span>
+        <button type="button" class="back-link" onclick={() => goto('/admin/dashboard')}>← Back to Inventory</button>
         <h1>Edit Hardware Product</h1>
       </div>
     </div>

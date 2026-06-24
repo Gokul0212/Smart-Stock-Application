@@ -46,9 +46,9 @@
 
 <nav class="navbar">
   <div class="nav-container">
-    <div class="brand" onclick={() => goto('/')}>
+<button type="button" class="brand" onclick={() => goto('/')}> 
       <span class="brand-smart">SMART</span><span class="brand-stock">STOCK</span>
-    </div>
+    </button>
 
     <div class="nav-links">
       {#if currentUser}
@@ -63,12 +63,12 @@
         {:else}
           <a href="/dashboard" class="nav-link">Browse Catalog</a>
           <a href="/orders" class="nav-link">Order History</a>
-          <div class="cart-container" onclick={() => goto('/cart')}>
+          <button type="button" class="cart-container" onclick={() => goto('/cart')}>
             <svg class="cart-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"></path>
             </svg>
             <span class="cart-badge">{cartCount}</span>
-          </div>
+          </button>
           <div class="user-profile">
             <span class="role-badge">USER</span>
             <span class="username">{currentUser.name}</span>

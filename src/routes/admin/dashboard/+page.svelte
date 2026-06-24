@@ -40,8 +40,14 @@
     }
   }
 
+  let successMsg = $state('');
+
   function handleProductDeleted(deletedId) {
     products = products.filter(p => p.id !== deletedId);
+    successMsg = "Product deleted successfully!";
+    setTimeout(() => {
+      successMsg = '';
+    }, 3000);
   }
 
   function handleLogout() {
@@ -104,6 +110,14 @@
         </button>
       </div>
     </div>
+
+    <!-- Notifications -->
+    {#if successMsg}
+      <div class="banner success-banner">
+        <span class="banner-icon">✓</span>
+        <span class="banner-text">{successMsg}</span>
+      </div>
+    {/if}
 
     <!-- Quick Stats Cards -->
     <div class="stats-grid">
@@ -172,7 +186,7 @@
         {:else}
           <div class="recents-list">
             {#each recentlyAdded as item}
-              <div class="recent-item" onclick={() => goto(`/admin/products/edit/${item.id}`)}>
+              <button type="button" class="recent-item" onclick={() => goto(`/admin/products/edit/${item.id}`)}>
                 <img src={item.imageUrl} alt={item.name} />
                 <div class="recent-details">
                   <h4>{item.name}</h4>
@@ -180,7 +194,7 @@
                   <span class="price">₹{Number(item.price).toLocaleString('en-IN')}</span>
                   <span class="stock">Stock: {item.stock}</span>
                 </div>
-              </div>
+              </button>
             {/each}
           </div>
         {/if}
@@ -362,6 +376,33 @@
     border-radius: 6px;
     padding: 20px;
     margin-bottom: 35px;
+  }
+
+  .banner {
+    border-radius: 4px;
+    padding: 12px;
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .success-banner {
+    background-color: rgba(46, 125, 50, 0.15);
+    border: 1px solid #2e7d32;
+  }
+
+  .banner-icon {
+    font-size: 16px;
+  }
+
+  .banner-text {
+    font-size: 13px;
+    font-weight: 500;
+  }
+
+  .success-banner .banner-text {
+    color: #a5d6a7;
   }
 
   .alert-banner h4 {

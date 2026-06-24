@@ -1,5 +1,5 @@
 import { json } from '@sveltejs/kit';
-import { srvGetProducts, srvUpdateProduct, srvAddOrder } from '$lib/server/db.js';
+import { dbGetProducts as srvGetProducts, dbUpdateProduct as srvUpdateProduct, dbAddOrder as srvAddOrder } from '$lib/firebase.js';
 
 export async function POST({ request, fetch }) {
   try {

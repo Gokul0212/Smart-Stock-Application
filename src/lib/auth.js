@@ -1,5 +1,6 @@
 import { writable } from 'svelte/store';
-import { dbGetUserByUsernameOrEmail, dbAddUser } from './firebase.js';
+import { dbGetUserByUsernameOrEmail, dbAddUser, firebaseAuth } from './firebase.js';
+import { signInWithEmailAndPassword, createUserWithEmailAndPassword, signOut } from 'firebase/auth';
 
 // Auth state store
 export const authUser = writable(null);
@@ -18,21 +19,34 @@ if (typeof window !== 'undefined') {
 
 // User-facing auth methods
 export async function login(usernameOrEmail, password) {
-  const user = await dbGetUserByUsernameOrEmail(usernameOrEmail);
-  if (!user) {
-    throw new Error("User not found.");
+  if (!firebaseAuth) throw new Error("Firebase Auth is not initialized.");
+
+  // Because Firebase Auth needs an email, check if the input is a username
+  let emailToUse = usernameOrEmail;
+  if (!usernameOrEmail.includes('@')) {
+    const user = await dbGetUserByUsernameOrEmail(usernameOrEmail);
+    if (!user) {
+      throw new Error("User not found.");
+    }
+    emailToUse = user.email;
   }
-  if (user.password !== password) {
-    throw new Error("Incorrect password.");
+
+  // 1. Authenticate with Firebase Auth
+  await signInWithEmailAndPassword(firebaseAuth, emailToUse, password);
+  
+  // 2. Fetch the extra user data from Firestore
+  const dbUser = await dbGetUserByUsernameOrEmail(emailToUse);
+  if (!dbUser) {
+    throw new Error("User metadata not found in database.");
   }
   
-  // Set user session info (omit sensitive password info from runtime store)
+  // Set user session info (without password)
   const sessionUser = {
-    id: user.id,
-    username: user.username,
-    email: user.email,
-    role: user.role || 'user',
-    name: user.name || user.username
+    id: dbUser.id,
+    username: dbUser.username,
+    email: dbUser.email,
+    role: dbUser.role || 'user',
+    name: dbUser.name || dbUser.username
   };
   
   authUser.set(sessionUser);
@@ -43,7 +57,9 @@ export async function login(usernameOrEmail, password) {
 }
 
 export async function registerUser({ name, username, email, phone, password }) {
-  // Check if username or email exists
+  if (!firebaseAuth) throw new Error("Firebase Auth is not initialized.");
+
+  // Check if username or email exists in Firestore
   const existingUser = await dbGetUserByUsernameOrEmail(username);
   if (existingUser) {
     throw new Error("Username already taken.");
@@ -53,11 +69,15 @@ export async function registerUser({ name, username, email, phone, password }) {
     throw new Error("Email already registered.");
   }
   
+  // 1. Create User in Firebase Auth
+  const userCredential = await createUserWithEmailAndPassword(firebaseAuth, email, password);
+  const uid = userCredential.user.uid;
+
+  // 2. Save User metadata to Firestore
   const newUser = {
-    id: 'usr_' + Math.random().toString(36).substr(2, 9),
+    id: uid, // Use Firebase Auth UID as the document ID
     username,
     email,
-    password,
     role: 'user', // Default registered users are customers
     name,
     phone
@@ -68,6 +88,8 @@ export async function registerUser({ name, username, email, phone, password }) {
 }
 
 export async function registerAdmin({ name, username, email, password, adminCode }) {
+  if (!firebaseAuth) throw new Error("Firebase Auth is not initialized.");
+
   const secretAdminCode = 'ADMIN123'; // Secret admin registration code
   
   if (adminCode !== secretAdminCode) {
@@ -83,11 +105,15 @@ export async function registerAdmin({ name, username, email, password, adminCode
     throw new Error("Email already registered.");
   }
   
+  // 1. Create User in Firebase Auth
+  const userCredential = await createUserWithEmailAndPassword(firebaseAuth, email, password);
+  const uid = userCredential.user.uid;
+
+  // 2. Save User metadata to Firestore
   const newUser = {
-    id: 'usr_' + Math.random().toString(36).substr(2, 9),
+    id: uid,
     username,
     email,
-    password,
     role: 'admin',
     name
   };
@@ -96,7 +122,10 @@ export async function registerAdmin({ name, username, email, password, adminCode
   return newUser;
 }
 
-export function logout() {
+export async function logout() {
+  if (firebaseAuth) {
+    await signOut(firebaseAuth);
+  }
   authUser.set(null);
   if (typeof window !== 'undefined') {
     localStorage.removeItem('sm_auth_user');

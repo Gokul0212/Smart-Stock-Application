@@ -61,7 +61,7 @@
 </script>
 
 <div class="card {product.stock < 5 ? 'low-stock-border' : ''}">
-  <div class="img-container" onclick={() => goto(`/products/${product.id}`)}>
+  <button type="button" class="img-container" onclick={() => goto(`/products/${product.id}`)}>
     <img src={product.imageUrl} alt={product.name} class="product-image" loading="lazy" />
     {#if product.stock === 0}
       <span class="sold-out-badge">SOLD OUT</span>
@@ -71,7 +71,7 @@
       {/if}
     {/if}
     <span class="category-badge">{product.category}</span>
-  </div>
+  </button>
 
   <div class="card-content">
     <h3 class="product-name" onclick={() => goto(`/products/${product.id}`)}>{product.name}</h3>

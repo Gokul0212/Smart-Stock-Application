@@ -120,7 +120,11 @@
     {#if success}
       <!-- Success View -->
       <div class="success-card">
-        <span class="success-icon">🎉</span>
+        <span class="success-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" style="color: #4caf50; width: 80px; height: 80px; display: inline-block;">
+            <path d="M20 6L9 17l-5-5"></path>
+          </svg>
+        </span>
         <h2>Purchase Successful!</h2>
         <p class="success-desc">Thank you for your order! Your payment was processed successfully.</p>
         <div class="email-notice">
