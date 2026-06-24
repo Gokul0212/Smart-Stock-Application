@@ -1,0 +1,106 @@
+@import 'tailwindcss';
+@import "tailwindcss";
+
+:root {
+	--color-netflix-black: #000000;
+	--color-netflix-dark: #141414;
+	--color-netflix-card: #181818;
+	--color-netflix-red: #e50914;
+	--color-netflix-red-hover: #b20710;
+	--font-family: 'Inter', system-ui, -apple-system, sans-serif;
+}
+
+body {
+	margin: 0;
+	padding: 0;
+	background-color: var(--color-netflix-black);
+	color: #ffffff;
+	font-family: var(--font-family);
+	overflow-x: hidden;
+}
+
+::-webkit-scrollbar {
+	width: 8px;
+	height: 8px;
+}
+
+::-webkit-scrollbar-track {
+	background: #0b0b0b;
+}
+
+::-webkit-scrollbar-thumb {
+	background: #222;
+	border-radius: 4px;
+	border: 1px solid #111;
+}
+
+::-webkit-scrollbar-thumb:hover {
+	background: var(--color-netflix-red);
+}
+
+input:focus,
+select:focus,
+textarea:focus {
+	outline: none;
+	border-color: var(--color-netflix-red) !important;
+	box-shadow: 0 0 10px rgba(229, 9, 20, 0.25) !important;
+}
+
+.hover-scale {
+	transition: transform 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.hover-scale:hover {
+	transform: scale(1.02);
+}
+
+.text-glow {
+	text-shadow: 0 0 10px rgba(229, 9, 20, 0.4);
+}
+
+.auth-bg-overlay {
+	background-image: linear-gradient(rgba(0, 0, 0, 0.65), rgba(0, 0, 0, 0.85)),
+    url('https://images.unsplash.com/photo-1542751371-adc38448a05e?w=1000&auto=format&fit=crop&q=60');
+	background-size: cover;
+	background-position: center;
+}
+
+.auth-bg-overlay-admin {
+	background-image: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.9)),
+    url('https://images.unsplash.com/photo-1518770660439-4636190af475?w=1000&auto=format&fit=crop&q=60');
+	background-size: cover;
+	background-position: center;
+}
+
+.image-input-group {
+	display: flex;
+	gap: 10px;
+}
+
+.image-input-group input {
+	flex-grow: 1;
+}
+
+.file-upload-btn {
+	background-color: #222;
+	color: #fff;
+	border: 1px solid #333;
+	padding: 12px 18px;
+	border-radius: 4px;
+	font-weight: 600;
+	font-size: 14px;
+	cursor: pointer;
+	display: inline-flex;
+	align-items: center;
+	white-space: nowrap;
+	transition: all 0.2s;
+}
+
+.file-upload-btn:hover {
+	background-color: #333;
+	border-color: #e50914;
+}
+
+.hidden-file-input {
+	display: none !important;
+}
