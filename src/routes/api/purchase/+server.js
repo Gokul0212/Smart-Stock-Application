@@ -1,5 +1,5 @@
 import { json } from '@sveltejs/kit';
-import { dbGetProducts as srvGetProducts, dbUpdateProduct as srvUpdateProduct, dbAddOrder as srvAddOrder } from '$lib/firebase.js';
+import { dbProcessPurchase } from '$lib/firebase.js';
 
 export async function POST({ request, fetch }) {
   try {
@@ -9,47 +9,24 @@ export async function POST({ request, fetch }) {
       return json({ success: false, message: "Checkout failed: User details or cart items are missing." }, { status: 400 });
     }
 
-    const products = await srvGetProducts();
-    const checkedItems = [];
-
-    // 1. Validate stock first
-    for (const item of items) {
-      const product = products.find(p => p.id === item.productId);
-      if (!product) {
-        return json({ success: false, message: `Product with ID ${item.productId} not found.` }, { status: 400 });
+    let createdOrders;
+    try {
+      createdOrders = await dbProcessPurchase(userId, items);
+    } catch (txError) {
+      // Check for specific thrown errors
+      if (txError.message.includes('Insufficient_Stock')) {
+        const msg = txError.message.replace('Insufficient_Stock: ', '');
+        return json({ success: false, message: msg }, { status: 400 });
       }
-
-      if (product.stock < item.quantity) {
-        return json({ 
-          success: false, 
-          message: `Insufficient stock for "${product.name}". Only ${product.stock} units available, but ${item.quantity} requested.` 
-        }, { status: 400 });
+      if (txError.message.includes('Product_Not_Found')) {
+        const msg = txError.message.replace('Product_Not_Found: ', '');
+        return json({ success: false, message: msg }, { status: 400 });
       }
-      checkedItems.push({ item, product });
+      throw txError;
     }
 
-    const createdOrders = [];
-
-    // 2. Reduce stock and record order for each item
-    for (const { item, product } of checkedItems) {
-      // Decrement stock quantity
-      const newStock = product.stock - item.quantity;
-      await srvUpdateProduct(product.id, { stock: newStock });
-
-      // Create order entry
-      const totalPrice = product.price * item.quantity;
-      const newOrder = await srvAddOrder({
-        userId,
-        productId: product.id,
-        productName: product.name,
-        quantity: item.quantity,
-        totalPrice,
-        orderStatus: "Completed"
-      });
-
-      createdOrders.push(newOrder);
-
-      // 3. Dispatch Email Notification
+    // 3. Dispatch Email Notification
+    for (const order of createdOrders) {
       try {
         await fetch('/api/email-notification', {
           method: 'POST',
@@ -57,13 +34,13 @@ export async function POST({ request, fetch }) {
           body: JSON.stringify({
             username: username || "User",
             email: email,
-            productName: product.name,
-            quantity: item.quantity,
-            totalPrice
+            productName: order.productName,
+            quantity: order.quantity,
+            totalPrice: order.totalPrice
           })
         });
       } catch (err) {
-        console.error(`Failed to send email notification for order of ${product.name}:`, err);
+        console.error(`Failed to send email notification for order of ${order.productName}:`, err);
       }
     }
 

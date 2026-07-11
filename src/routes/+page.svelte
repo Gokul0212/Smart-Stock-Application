@@ -32,6 +32,12 @@
 <div class="landing-page auth-bg-overlay">
   <div class="landing-content">
     <header class="landing-header">
+      <div class="logo-container">
+        <svg class="logo" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <rect width="100" height="100" rx="20" fill="#e50914"/>
+          <path d="M30 50L45 65L70 35" stroke="white" stroke-width="8" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </div>
       <h1 class="main-title"><span class="smart">SMART</span><span class="stock">STOCK</span></h1>
       <p class="subtitle text-glow">High-Performance Computer Hardware Inventory & Purchase System</p>
     </header>
@@ -72,7 +78,17 @@
       </div>
     </div>
 
+    <div class="about-section">
+      <h3>About Smart Stock</h3>
+      <p>Smart Stock is the premier destination for high-performance computer hardware inventory management and retail. We provide a seamless experience for both customers seeking top-tier components and administrators managing robust inventory systems.</p>
+    </div>
+
     <footer class="landing-footer">
+      <div class="footer-links">
+        <a href="#help">Help & Settings</a>
+        <a href="#account">Your Account</a>
+        <a href="#customer-service">Customer Service</a>
+      </div>
       <p>© 2026 Smart Stock Management System. Designed for performance hardware distributors.</p>
     </footer>
   </div>
@@ -100,6 +116,19 @@
 
   .landing-header {
     text-align: center;
+  }
+
+  .logo-container {
+    margin-bottom: 20px;
+    display: flex;
+    justify-content: center;
+  }
+
+  .logo {
+    width: 60px;
+    height: 60px;
+    box-shadow: 0 0 15px rgba(229, 9, 20, 0.4);
+    border-radius: 20px;
   }
 
   .main-title {
@@ -239,9 +268,50 @@
     border-color: #666;
   }
 
+  .about-section {
+    background-color: rgba(20, 20, 20, 0.6);
+    border: 1px solid #2d2d2d;
+    border-radius: 12px;
+    padding: 30px;
+    text-align: center;
+    max-width: 800px;
+    width: 100%;
+  }
+
+  .about-section h3 {
+    color: #ffffff;
+    margin-top: 0;
+    margin-bottom: 15px;
+    font-size: 22px;
+  }
+
+  .about-section p {
+    color: #aaaaaa;
+    line-height: 1.6;
+    margin: 0;
+  }
+
   .landing-footer {
     text-align: center;
     margin-top: 20px;
+  }
+
+  .footer-links {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    margin-bottom: 15px;
+  }
+
+  .footer-links a {
+    color: #cccccc;
+    text-decoration: none;
+    font-size: 14px;
+    transition: color 0.2s;
+  }
+
+  .footer-links a:hover {
+    color: #e50914;
   }
 
   .landing-footer p {

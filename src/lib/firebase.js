@@ -10,7 +10,9 @@ import {
   updateDoc, 
   deleteDoc, 
   query, 
-  where 
+  where,
+  runTransaction,
+  increment
 } from 'firebase/firestore';
 import { getAuth } from 'firebase/auth';
 
@@ -90,6 +92,16 @@ export async function dbGetProducts() {
   return snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
 }
 
+export async function dbGetProductById(id) {
+  checkDb();
+  const docRef = doc(firestore, 'products', id);
+  const docSnap = await getDoc(docRef);
+  if (docSnap.exists()) {
+    return { id: docSnap.id, ...docSnap.data() };
+  }
+  return null;
+}
+
 export async function dbAddProduct(product) {
   checkDb();
   const newProduct = {
@@ -120,6 +132,14 @@ export async function dbUpdateProduct(id, updatedFields) {
 export async function dbDeleteProduct(id) {
   checkDb();
   await deleteDoc(doc(firestore, 'products', id));
+
+  // Cascade delete: Remove this product from all users' carts
+  const q = query(collection(firestore, 'cart'), where('productId', '==', id));
+  const snapshot = await getDocs(q);
+  for (const itemDoc of snapshot.docs) {
+    await deleteDoc(doc(firestore, 'cart', itemDoc.id));
+  }
+
   return { success: true };
 }
 
@@ -162,10 +182,9 @@ export async function dbAddToCart(userId, productId, quantity = 1) {
   const snapshot = await getDocs(q);
   
   if (!snapshot.empty) {
-    // Update existing cart item
+    // Update existing cart item atomically
     const existingDoc = snapshot.docs[0];
-    const newQuantity = existingDoc.data().quantity + quantity;
-    await updateDoc(doc(firestore, 'cart', existingDoc.id), { quantity: newQuantity });
+    await updateDoc(doc(firestore, 'cart', existingDoc.id), { quantity: increment(quantity) });
   } else {
     // Add new cart item
     await addDoc(collection(firestore, 'cart'), {
@@ -213,4 +232,52 @@ export async function dbClearCart(userId) {
   }
   
   return [];
+}
+
+export async function dbProcessPurchase(userId, items) {
+  checkDb();
+
+  const checkedItems = [];
+
+  // 1. Read all product docs FIRST using normal getDoc (reliable in Node.js Web SDK)
+  for (const item of items) {
+    const productRef = doc(firestore, 'products', item.productId);
+    const productSnap = await getDoc(productRef);
+    
+    if (!productSnap.exists()) {
+      throw new Error(`Product_Not_Found: Product with ID ${item.productId} not found.`);
+    }
+
+    const productData = productSnap.data();
+
+    if (productData.stock < item.quantity) {
+      throw new Error(`Insufficient_Stock: Insufficient stock for "${productData.name}". Only ${productData.stock} units available, but ${item.quantity} requested.`);
+    }
+    
+    checkedItems.push({ item, productRef, productData, productId: productSnap.id });
+  }
+
+  const createdOrders = [];
+
+  // 2. Perform all updates and inserts
+  for (const { item, productRef, productData, productId } of checkedItems) {
+    // Update stock securely using atomic increment
+    await updateDoc(productRef, { stock: increment(-item.quantity) });
+
+    // Create order entry
+    const totalPrice = productData.price * item.quantity;
+    const orderRef = await addDoc(collection(firestore, 'orders'), {
+      userId,
+      productId,
+      productName: productData.name,
+      quantity: item.quantity,
+      totalPrice,
+      orderStatus: "Completed",
+      purchaseDate: new Date().toISOString()
+    });
+    
+    createdOrders.push({ orderId: orderRef.id, id: orderRef.id, productName: productData.name, quantity: item.quantity, totalPrice });
+  }
+
+  return createdOrders;
 }
