@@ -93,6 +93,9 @@
           </svg>
           <span class="cart-badge">{cartCount}</span>
         </button>
+        <div class="user-greeting">
+          <span class="user-welcome">Welcome, <strong>{currentUser?.name || 'Customer'}</strong></span>
+        </div>
         <div class="dropdown">
           <button class="dropbtn">User Space <span class="arrow">▼</span></button>
           <div class="dropdown-content">
@@ -202,6 +205,15 @@
     margin: 0;
     font-size: 26px;
     font-weight: 800;
+    color: #ffffff;
+  }
+
+  .user-welcome {
+    font-size: 14px;
+    color: #aaaaaa;
+  }
+
+  .user-welcome strong {
     color: #ffffff;
   }
 
