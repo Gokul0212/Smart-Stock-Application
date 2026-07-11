@@ -34,22 +34,6 @@
     <div class="top-bar-left">
       <a href="/products" class="nav-link product-link">Browse Products</a>
     </div>
-    <div class="top-bar-right">
-      <div class="dropdown">
-        <button class="dropbtn">User Space <span class="arrow">▼</span></button>
-        <div class="dropdown-content">
-          <a href="#help">Help & Settings</a>
-          <a href="#account">Your Account</a>
-          <a href="#customer-service">Customer Service</a>
-          <hr class="dropdown-divider">
-          {#if currentUser}
-            <button class="dropdown-auth-btn" onclick={() => goto('/dashboard')}>Go to Dashboard</button>
-          {:else}
-            <button class="dropdown-auth-btn" onclick={() => goto('/login')}>User Login</button>
-          {/if}
-        </div>
-      </div>
-    </div>
   </nav>
 
   <div class="landing-content">
