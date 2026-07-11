@@ -33,9 +33,13 @@
   <div class="landing-content">
     <header class="landing-header">
       <div class="logo-container">
-        <svg class="logo" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <rect width="100" height="100" rx="20" fill="#e50914"/>
-          <path d="M30 50L45 65L70 35" stroke="white" stroke-width="8" stroke-linecap="round" stroke-linejoin="round"/>
+        <svg class="logo cpu-logo" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <rect x="20" y="20" width="60" height="60" rx="10" fill="#202020" stroke="#e50914" stroke-width="4"/>
+          <rect x="35" y="35" width="30" height="30" rx="4" fill="#e50914"/>
+          <path d="M40 20 V10 M50 20 V10 M60 20 V10" stroke="#e50914" stroke-width="4" stroke-linecap="round"/>
+          <path d="M40 80 V90 M50 80 V90 M60 80 V90" stroke="#e50914" stroke-width="4" stroke-linecap="round"/>
+          <path d="M20 40 H10 M20 50 H10 M20 60 H10" stroke="#e50914" stroke-width="4" stroke-linecap="round"/>
+          <path d="M80 40 H90 M80 50 H90 M80 60 H90" stroke="#e50914" stroke-width="4" stroke-linecap="round"/>
         </svg>
       </div>
       <h1 class="main-title"><span class="smart">SMART</span><span class="stock">STOCK</span></h1>
