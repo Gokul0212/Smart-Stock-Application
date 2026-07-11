@@ -15,6 +15,7 @@
   let sidebarOpen = $state(true);
   let cartCount = $state(0);
   let cartInterval;
+  let showProfileModal = $state(false);
 
   async function updateCartCount() {
     if (currentUser && currentUser.role === 'user') {
@@ -92,12 +93,41 @@
           </svg>
           <span class="cart-badge">{cartCount}</span>
         </button>
-        <div class="user-profile">
-          <span class="user-welcome">Welcome back, <strong>{currentUser?.name || 'Customer'}</strong></span>
-          <button class="logout-btn" onclick={handleLogout}>Sign Out</button>
+        <div class="dropdown">
+          <button class="dropbtn">User Space <span class="arrow">▼</span></button>
+          <div class="dropdown-content">
+            <a href="#help">Help & Settings</a>
+            <button class="dropdown-item-btn" onclick={() => showProfileModal = true}>Your Account</button>
+            <a href="#customer-service">Customer Service</a>
+            <hr class="dropdown-divider">
+            <button class="dropdown-auth-btn" onclick={handleLogout}>Sign Out</button>
+          </div>
         </div>
       </div>
     </div>
+
+    {#if showProfileModal}
+      <div class="modal-backdrop" onclick={() => showProfileModal = false}>
+        <div class="modal-content" onclick={(e) => e.stopPropagation()}>
+          <h2>Your Account</h2>
+          <div class="profile-details">
+            <div class="info-group">
+              <span class="info-label">Name</span>
+              <span class="info-value">{currentUser?.name || 'Customer'}</span>
+            </div>
+            <div class="info-group">
+              <span class="info-label">Email</span>
+              <span class="info-value">{currentUser?.email || 'N/A'}</span>
+            </div>
+            <div class="info-group">
+              <span class="info-label">Address</span>
+              <span class="info-value">{currentUser?.address || '123 Smart Stock Way, Tech City, ST 12345'}</span>
+            </div>
+          </div>
+          <button class="close-modal-btn" onclick={() => showProfileModal = false}>Close</button>
+        </div>
+      </div>
+    {/if}
 
     <!-- Filter Component -->
     <ProductFilter bind:activeCategory bind:searchQuery />
@@ -175,13 +205,95 @@
     color: #ffffff;
   }
 
-  .user-welcome {
-    font-size: 14px;
-    color: #aaaaaa;
+  .dropdown {
+    position: relative;
+    display: inline-block;
   }
 
-  .user-welcome strong {
+  .dropbtn {
+    background-color: #1a1a1a;
     color: #ffffff;
+    padding: 8px 16px;
+    font-size: 14px;
+    font-weight: 600;
+    border: 1px solid #333;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.2s;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .arrow {
+    font-size: 10px;
+  }
+
+  .dropbtn:hover {
+    border-color: #e50914;
+    color: #e50914;
+  }
+
+  .dropdown-content {
+    display: none;
+    position: absolute;
+    right: 0;
+    background-color: #1a1a1a;
+    min-width: 180px;
+    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.5);
+    border: 1px solid #333;
+    border-radius: 8px;
+    z-index: 10;
+    overflow: hidden;
+    margin-top: 5px;
+  }
+
+  .dropdown-content a, .dropdown-item-btn {
+    color: #cccccc;
+    padding: 12px 16px;
+    text-decoration: none;
+    display: block;
+    font-size: 14px;
+    background: none;
+    border: none;
+    width: 100%;
+    text-align: left;
+    cursor: pointer;
+    font-family: inherit;
+    transition: background-color 0.2s, color 0.2s;
+  }
+
+  .dropdown-content a:hover, .dropdown-item-btn:hover {
+    background-color: #2a2a2a;
+    color: #ffffff;
+  }
+
+  .dropdown-divider {
+    border: 0;
+    border-top: 1px solid #333;
+    margin: 0;
+  }
+
+  .dropdown-auth-btn {
+    width: 100%;
+    background-color: transparent;
+    color: #e50914;
+    border: none;
+    padding: 12px 16px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    text-align: left;
+    transition: background-color 0.2s, color 0.2s;
+  }
+
+  .dropdown-auth-btn:hover {
+    background-color: #e50914;
+    color: #ffffff;
+  }
+
+  .dropdown:hover .dropdown-content {
+    display: block;
   }
 
   .header-right {
@@ -226,30 +338,79 @@
     padding: 2px;
   }
 
-  .user-profile {
+  .modal-backdrop {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.7);
     display: flex;
+    justify-content: center;
     align-items: center;
+    z-index: 1000;
+    backdrop-filter: blur(4px);
+  }
+
+  .modal-content {
+    background-color: #141414;
+    border: 1px solid #333;
+    border-radius: 12px;
+    padding: 30px;
+    width: 90%;
+    max-width: 400px;
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.5);
+  }
+
+  .modal-content h2 {
+    color: #ffffff;
+    margin-top: 0;
+    margin-bottom: 20px;
+    font-size: 22px;
+    border-bottom: 1px solid #333;
+    padding-bottom: 15px;
+  }
+
+  .profile-details {
+    display: flex;
+    flex-direction: column;
     gap: 15px;
-    border-left: 1px solid #333;
-    padding-left: 15px;
+    margin-bottom: 25px;
   }
 
-  .logout-btn {
-    background-color: transparent;
-    color: #e50914;
-    border: 1px solid #e50914;
-    padding: 5px 10px;
-    border-radius: 4px;
-    font-size: 13px;
-    font-weight: 600;
-    cursor: pointer;
-    transition: all 0.2s;
+  .info-group {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
   }
 
-  .logout-btn:hover {
+  .info-label {
+    color: #888888;
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+  }
+
+  .info-value {
+    color: #ffffff;
+    font-size: 15px;
+  }
+
+  .close-modal-btn {
+    width: 100%;
     background-color: #e50914;
     color: #ffffff;
-    box-shadow: 0 0 10px rgba(229, 9, 20, 0.4);
+    border: none;
+    padding: 12px;
+    border-radius: 6px;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.2s;
+  }
+
+  .close-modal-btn:hover {
+    background-color: #b20710;
   }
 
   /* Products Grid */
