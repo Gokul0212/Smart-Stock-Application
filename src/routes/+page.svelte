@@ -30,19 +30,36 @@
 </script>
 
 <div class="landing-page auth-bg-overlay">
+  <nav class="top-bar">
+    <div class="top-bar-links">
+      <a href="#help">Help & Settings</a>
+      <a href="#account">Your Account</a>
+      <a href="#customer-service">Customer Service</a>
+    </div>
+    <div class="top-bar-auth">
+      {#if currentUser}
+        <button class="login-btn" onclick={() => goto('/dashboard')}>Go to Dashboard</button>
+      {:else}
+        <button class="login-btn" onclick={() => goto('/login')}>User Login</button>
+      {/if}
+    </div>
+  </nav>
+
   <div class="landing-content">
     <header class="landing-header">
-      <div class="logo-container">
-        <svg class="logo cpu-logo" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <rect x="20" y="20" width="60" height="60" rx="10" fill="#202020" stroke="#e50914" stroke-width="4"/>
-          <rect x="35" y="35" width="30" height="30" rx="4" fill="#e50914"/>
-          <path d="M40 20 V10 M50 20 V10 M60 20 V10" stroke="#e50914" stroke-width="4" stroke-linecap="round"/>
-          <path d="M40 80 V90 M50 80 V90 M60 80 V90" stroke="#e50914" stroke-width="4" stroke-linecap="round"/>
-          <path d="M20 40 H10 M20 50 H10 M20 60 H10" stroke="#e50914" stroke-width="4" stroke-linecap="round"/>
-          <path d="M80 40 H90 M80 50 H90 M80 60 H90" stroke="#e50914" stroke-width="4" stroke-linecap="round"/>
-        </svg>
+      <div class="title-wrapper">
+        <div class="logo-container">
+          <svg class="logo cpu-logo" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <rect x="20" y="20" width="60" height="60" rx="10" fill="#202020" stroke="#e50914" stroke-width="4"/>
+            <rect x="35" y="35" width="30" height="30" rx="4" fill="#e50914"/>
+            <path d="M40 20 V10 M50 20 V10 M60 20 V10" stroke="#e50914" stroke-width="4" stroke-linecap="round"/>
+            <path d="M40 80 V90 M50 80 V90 M60 80 V90" stroke="#e50914" stroke-width="4" stroke-linecap="round"/>
+            <path d="M20 40 H10 M20 50 H10 M20 60 H10" stroke="#e50914" stroke-width="4" stroke-linecap="round"/>
+            <path d="M80 40 H90 M80 50 H90 M80 60 H90" stroke="#e50914" stroke-width="4" stroke-linecap="round"/>
+          </svg>
+        </div>
+        <h1 class="main-title"><span class="smart">SMART</span><span class="stock">STOCK</span></h1>
       </div>
-      <h1 class="main-title"><span class="smart">SMART</span><span class="stock">STOCK</span></h1>
       <p class="subtitle text-glow">High-Performance Computer Hardware Inventory & Purchase System</p>
     </header>
 
@@ -88,11 +105,6 @@
     </div>
 
     <footer class="landing-footer">
-      <div class="footer-links">
-        <a href="#help">Help & Settings</a>
-        <a href="#account">Your Account</a>
-        <a href="#customer-service">Customer Service</a>
-      </div>
       <p>© 2026 Smart Stock Management System. Designed for performance hardware distributors.</p>
     </footer>
   </div>
@@ -102,9 +114,9 @@
   .landing-page {
     min-height: 100vh;
     display: flex;
-    justify-content: center;
+    flex-direction: column;
     align-items: center;
-    padding: 40px 20px;
+    padding: 0 20px 40px;
     box-sizing: border-box;
     font-family: 'Inter', system-ui, sans-serif;
   }
@@ -116,14 +128,65 @@
     flex-direction: column;
     align-items: center;
     gap: 50px;
+    margin-top: 60px;
+  }
+
+  .top-bar {
+    width: 100%;
+    max-width: 1200px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px 0;
+    margin-bottom: 20px;
+  }
+
+  .top-bar-links {
+    display: flex;
+    gap: 20px;
+  }
+
+  .top-bar-links a {
+    color: #cccccc;
+    text-decoration: none;
+    font-size: 14px;
+    transition: color 0.2s;
+  }
+
+  .top-bar-links a:hover {
+    color: #e50914;
+  }
+
+  .login-btn {
+    background-color: transparent;
+    color: #ffffff;
+    border: 1px solid #e50914;
+    padding: 8px 20px;
+    border-radius: 6px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+
+  .login-btn:hover {
+    background-color: #e50914;
+    box-shadow: 0 0 10px rgba(229, 9, 20, 0.4);
   }
 
   .landing-header {
     text-align: center;
   }
 
+  .title-wrapper {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 20px;
+    margin-bottom: 15px;
+  }
+
   .logo-container {
-    margin-bottom: 20px;
     display: flex;
     justify-content: center;
   }
@@ -132,7 +195,7 @@
     width: 60px;
     height: 60px;
     box-shadow: 0 0 15px rgba(229, 9, 20, 0.4);
-    border-radius: 20px;
+    border-radius: 10px; /* matched the rx of cpu svg */
   }
 
   .main-title {
@@ -298,24 +361,6 @@
   .landing-footer {
     text-align: center;
     margin-top: 20px;
-  }
-
-  .footer-links {
-    display: flex;
-    justify-content: center;
-    gap: 20px;
-    margin-bottom: 15px;
-  }
-
-  .footer-links a {
-    color: #cccccc;
-    text-decoration: none;
-    font-size: 14px;
-    transition: color 0.2s;
-  }
-
-  .footer-links a:hover {
-    color: #e50914;
   }
 
   .landing-footer p {
