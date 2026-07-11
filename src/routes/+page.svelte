@@ -30,11 +30,7 @@
 </script>
 
 <div class="landing-page auth-bg-overlay">
-  <nav class="top-bar">
-    <div class="top-bar-left">
-      <a href="/products" class="nav-link product-link">Browse Products</a>
-    </div>
-  </nav>
+
 
   <div class="landing-content">
     <header class="landing-header">
