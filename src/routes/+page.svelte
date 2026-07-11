@@ -31,17 +31,24 @@
 
 <div class="landing-page auth-bg-overlay">
   <nav class="top-bar">
-    <div class="top-bar-links">
-      <a href="#help">Help & Settings</a>
-      <a href="#account">Your Account</a>
-      <a href="#customer-service">Customer Service</a>
+    <div class="top-bar-left">
+      <a href="/products" class="nav-link product-link">Browse Products</a>
     </div>
-    <div class="top-bar-auth">
-      {#if currentUser}
-        <button class="login-btn" onclick={() => goto('/dashboard')}>Go to Dashboard</button>
-      {:else}
-        <button class="login-btn" onclick={() => goto('/login')}>User Login</button>
-      {/if}
+    <div class="top-bar-right">
+      <div class="dropdown">
+        <button class="dropbtn">User Space <span class="arrow">▼</span></button>
+        <div class="dropdown-content">
+          <a href="#help">Help & Settings</a>
+          <a href="#account">Your Account</a>
+          <a href="#customer-service">Customer Service</a>
+          <hr class="dropdown-divider">
+          {#if currentUser}
+            <button class="dropdown-auth-btn" onclick={() => goto('/dashboard')}>Go to Dashboard</button>
+          {:else}
+            <button class="dropdown-auth-btn" onclick={() => goto('/login')}>User Login</button>
+          {/if}
+        </div>
+      </div>
     </div>
   </nav>
 
@@ -141,37 +148,101 @@
     margin-bottom: 20px;
   }
 
-  .top-bar-links {
-    display: flex;
-    gap: 20px;
-  }
-
-  .top-bar-links a {
-    color: #cccccc;
+  .nav-link {
+    color: #ffffff;
     text-decoration: none;
-    font-size: 14px;
+    font-size: 16px;
+    font-weight: 600;
     transition: color 0.2s;
   }
 
-  .top-bar-links a:hover {
+  .nav-link:hover {
     color: #e50914;
   }
 
-  .login-btn {
+  .dropdown {
+    position: relative;
+    display: inline-block;
+  }
+
+  .dropbtn {
     background-color: transparent;
     color: #ffffff;
-    border: 1px solid #e50914;
-    padding: 8px 20px;
+    padding: 8px 16px;
+    font-size: 15px;
+    font-weight: 600;
+    border: 1px solid #444;
     border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.2s;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .arrow {
+    font-size: 10px;
+  }
+
+  .dropbtn:hover {
+    border-color: #e50914;
+    color: #e50914;
+  }
+
+  .dropdown-content {
+    display: none;
+    position: absolute;
+    right: 0;
+    background-color: #1a1a1a;
+    min-width: 180px;
+    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.5);
+    border: 1px solid #333;
+    border-radius: 8px;
+    z-index: 1;
+    overflow: hidden;
+    margin-top: 5px;
+  }
+
+  .dropdown-content a {
+    color: #cccccc;
+    padding: 12px 16px;
+    text-decoration: none;
+    display: block;
+    font-size: 14px;
+    transition: background-color 0.2s, color 0.2s;
+  }
+
+  .dropdown-content a:hover {
+    background-color: #2a2a2a;
+    color: #ffffff;
+  }
+
+  .dropdown-divider {
+    border: 0;
+    border-top: 1px solid #333;
+    margin: 0;
+  }
+
+  .dropdown-auth-btn {
+    width: 100%;
+    background-color: transparent;
+    color: #e50914;
+    border: none;
+    padding: 12px 16px;
     font-size: 14px;
     font-weight: 600;
     cursor: pointer;
-    transition: all 0.2s;
+    text-align: left;
+    transition: background-color 0.2s, color 0.2s;
   }
 
-  .login-btn:hover {
+  .dropdown-auth-btn:hover {
     background-color: #e50914;
-    box-shadow: 0 0 10px rgba(229, 9, 20, 0.4);
+    color: #ffffff;
+  }
+
+  .dropdown:hover .dropdown-content {
+    display: block;
   }
 
   .landing-header {
